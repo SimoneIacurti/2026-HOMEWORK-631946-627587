@@ -69,4 +69,8 @@ public class Partita {
 	public Labirinto getLabirinto() {
 		return this.labirinto;
 	}
+	
+	public boolean giocatoreIsVivo() {
+		return this.giocatore.getCfu()>0;
+	}
 }
