@@ -2,99 +2,134 @@ package it.uniroma3.diadia.ambienti;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
-import org.junit.jupiter.api.BeforeEach;
 class StanzaTest {
 	
-	private Stanza stanza;
-	private Attrezzo attrezzo1;
-	private Attrezzo attrezzo2;
-	private Attrezzo attrezzo3;
-	
+private  Stanza biblioteca;
+private Stanza laboratorio;
+private Stanza atrio;
+private Stanza ovest;
+private Attrezzo martello;
+private Attrezzo osso;
 	@BeforeEach
-	public void setUp() {
-		 stanza = new Stanza("stanza"); 
-	     attrezzo1 = new Attrezzo("attrezzo1", 1);
-	     attrezzo2 = new Attrezzo("attrezzo2", 2);
-	     attrezzo3 = new Attrezzo("attrezzo3", 3);
+	void setUp() throws Exception {
+		biblioteca= new Stanza("biblioteca");
+		laboratorio= new Stanza("laboratorio");
+		atrio=new Stanza("atrio");
+		ovest=new Stanza("ovest");
+		martello=new Attrezzo("martello",6);
+		osso=new Attrezzo("osso",2);
 	}
 
 	@Test
-	void testStanzeVuoteNoAttrezzi() {
-		assertFalse(this.stanza.hasAttrezzo("martello"));
+	void testImpostaStanzaAdiacente() {
+	    atrio.impostaStanzaAdiacente(Direzioni.NORD, biblioteca);
+	    assertEquals(biblioteca, atrio.getStanzaAdiacente(Direzioni.NORD));
 	}
-	
+
 	@Test
-	void testStanzaUnSoloAttrezzo() {
-		assertFalse(this.stanza.hasAttrezzo("attrezzo1"));
-		this.stanza.addAttrezzo(attrezzo1);
-		assertTrue(this.stanza.hasAttrezzo("attrezzo1"));
+	void testImpostaStanzaAdiacenteNull() {
+	    assertNull(atrio.getStanzaAdiacente(Direzioni.NORD));
 	}
-	
+
 	@Test
-	void testOggettoEsisteInStanzaPiena() {
-		for(int i=0; i<10; i++) {
-			stanza.addAttrezzo(new Attrezzo("attrezzo" + i, i));
-		}
-		assertTrue(this.stanza.hasAttrezzo("attrezzo1"));
+	void testAggiornaStanzaAdiacente() {
+	    atrio.impostaStanzaAdiacente(Direzioni.NORD, biblioteca);
+	    atrio.impostaStanzaAdiacente(Direzioni.NORD, laboratorio);
+	    assertEquals(laboratorio, atrio.getStanzaAdiacente(Direzioni.NORD));
 	}
-	
+
 	@Test
-	void aggiungiAttrezzoNull() {
-		assertFalse(stanza.addAttrezzo(null));
+	void testAddAttrezzoAggiungoUnAttrezzo() {
+	    assertTrue(atrio.addAttrezzo(martello));
 	}
-	
+
 	@Test
-	void aggiungiUnSoloAttrezzo() {
-		assertTrue(stanza.addAttrezzo(attrezzo1));
+	void testAddAttrezzoAggiungoDueAttrezzi() {
+	    atrio.addAttrezzo(martello);
+	    atrio.addAttrezzo(osso);
+	    assertTrue(atrio.hasAttrezzo("martello"));
+	    assertTrue(atrio.hasAttrezzo("osso"));
 	}
-	
+
 	@Test
-	void aggiungiOggettoConStanzaPiena() {
-		for(int i=0; i<10; i++) {
-			stanza.addAttrezzo(new Attrezzo("attrezzo" + i, i));
-		}
-		assertFalse(this.stanza.addAttrezzo(attrezzo2));
-    }
-	
-	@Test
-	void ottieniOggettoNonEsistente() {
-		assertNull(this.stanza.getAttrezzo("martello"));
+	void testGetAttrezziStanzaVuota() {
+	    assertTrue(atrio.getAttrezzi().isEmpty());
 	}
-	
+
 	@Test
-	void ottieniOggettoDaStanzaConUnSoloOggetto() {
-		this.stanza.addAttrezzo(attrezzo3);
-		assertNotNull(this.stanza.getAttrezzo("attrezzo3"));
+	void testGetAttrezziStanzaConUnAttrezzo() {
+	    atrio.addAttrezzo(martello);
+	    assertEquals(martello, atrio.getAttrezzi().get(0));
 	}
-	
+
 	@Test
-	void ottieniOggettoDaStanzaPiena() {
-		for(int i=0; i<10; i++) {
-			stanza.addAttrezzo(new Attrezzo("attrezzo" + i, i));
-		}
-		assertNotNull(this.stanza.getAttrezzo("attrezzo1"));
+	void testHasAttrezzoStanzaVuota() {
+	    assertFalse(atrio.hasAttrezzo("martello"));
 	}
-	
+
 	@Test
-	void ottieniStanzaAdiacenteNulla() {
-		assertNull(this.stanza.getStanzaAdiacente(null));
+	void testStanzaHasUnAttrezzo() {
+	    atrio.addAttrezzo(martello);
+	    assertTrue(atrio.hasAttrezzo("martello"));
 	}
-	
+
 	@Test
-	void ottieniStanzaAdiacenteNonEsistente() {
-		Stanza Stanza1=new Stanza("Stanza1");
-		this.stanza.impostaStanzaAdiacente("sud", Stanza1);
-		assertNull(this.stanza.getStanzaAdiacente("nord"));
+	void testGetAttrezzoStanzaVuota() {
+	    assertNull(atrio.getAttrezzo("martello"));
 	}
-	
+
 	@Test
-	void ottieniUnaStanzaAdiacente() {
-		Stanza Stanza1=new Stanza("Stanza1");
-		this.stanza.impostaStanzaAdiacente("nord", Stanza1);
-		assertNotNull(this.stanza.getStanzaAdiacente("nord"));
+	void testGetAttrezzoStanzaConOggetto() {
+	    atrio.addAttrezzo(martello);
+	    assertEquals(martello, atrio.getAttrezzo("martello"));
+	}
+
+	@Test
+	void testGetAttrezzoStanzaSenzaOggetto() {
+	    atrio.addAttrezzo(martello);
+	    assertNull(atrio.getAttrezzo("osso"));
+	}
+
+	@Test
+	void testRemoveOggettoDaStanzaVuota() {
+	    assertFalse(atrio.removeAttrezzo(martello));
+	}
+
+	@Test
+	void testRemoveAttrezzoDaStanzaConUnOggetto() {
+	    atrio.addAttrezzo(martello);
+	    assertTrue(atrio.removeAttrezzo(martello));
+	}
+
+	@Test
+	void testRemoveAttrezzoStanzaSenzaOggetto() {
+	    atrio.addAttrezzo(martello);
+	    assertFalse(atrio.removeAttrezzo(osso));
+	}
+
+	@Test
+	void testSenzaDirezioni() {
+	    assertEquals(0, atrio.getDirezioni().size());
+	}
+
+	@Test
+	void testUnaDirezione() {
+	    atrio.impostaStanzaAdiacente(Direzioni.SUD, laboratorio);
+	    assertTrue(atrio.getDirezioni().contains(Direzioni.SUD));
+	}
+
+	@Test
+	void testTuttaTranneUnaDirezione() {
+	    atrio.impostaStanzaAdiacente(Direzioni.SUD, laboratorio);
+	    atrio.impostaStanzaAdiacente(Direzioni.EST, biblioteca);
+	    atrio.impostaStanzaAdiacente(Direzioni.OVEST, ovest);
+	    assertFalse(atrio.getDirezioni().contains(Direzioni.NORD)); 
+	    
 	}
 }

@@ -24,7 +24,7 @@ class ComandoPosaTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		partita = new Partita();
+		partita = new Partita(io);
 		attrezzo = new Attrezzo("martello", 2);
 		comando = new ComandoPosa();
 		io=new IOConsole();

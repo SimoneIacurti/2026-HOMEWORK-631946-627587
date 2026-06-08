@@ -14,10 +14,11 @@ class PartitaTest {
 	private Partita p;
 	private Labirinto l;
 	private Giocatore g;
+	private IO io;
 
 	@BeforeEach
 	void setUp() {
-		p=new Partita();
+		p=new Partita(io);
 		l=p.getLabirinto();
 		g=p.getGiocatore();
 	}

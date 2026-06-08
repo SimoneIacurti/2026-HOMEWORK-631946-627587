@@ -2,9 +2,7 @@ package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
-
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,7 @@ class ComandoPrendiTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		partita = new Partita();
+		partita = new Partita(io);
 		attrezzo = new Attrezzo("martello", 2);
 		attrezzoPesante = new Attrezzo("incudine", 11);
 		comando = new ComandoPrendi();
@@ -34,7 +32,7 @@ class ComandoPrendiTest {
 	}
 	
 	public boolean attrezzoPresente(String s) {
-		Attrezzo[] array = partita.getStanzaCorrente().getAttrezzi();
+		List<Attrezzo> array = partita.getStanzaCorrente().getAttrezzi();
 		for(Attrezzo a : array) {
 			if(a != null && s.equals(a.getNome()))
 					return true;

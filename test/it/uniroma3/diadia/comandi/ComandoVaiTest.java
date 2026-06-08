@@ -5,52 +5,68 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.IOConsole;
 import it.uniroma3.diadia.Partita;
-import it.uniroma3.diadia.ambienti.Stanza;
+import it.uniroma3.diadia.ambienti.Labirinto;
 
 class ComandoVaiTest {
 	
-	private Stanza s1;
-	private Stanza s2;
 	private ComandoVai vai;
 	private Partita p;
+	private IO io;
+	private Labirinto labirinto;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		s1 = new Stanza("aula 1");
-		s2 = new Stanza("aula 2");
 		vai = new ComandoVai();
-		p = new Partita();
+		p = new Partita(io);
 		vai.setIo(new IOConsole());
 	}
 
 	@Test
-	public void testVaiNull() {
-		p.setStanzaCorrente(s1);
+	void testSetParametro() {
+		vai.setParametro("nord");
 		vai.esegui(p);
-		assertEquals(s1, p.getStanzaCorrente());
+		assertEquals("Biblioteca",this.p.getStanzaCorrente().getNome());
+		assertEquals(19,this.p.getGiocatore().getCfu());	
+	}
+	@Test
+	void testDirezioneInesistente() {
+		vai.setParametro("sest");
+		vai.esegui(p);
+		assertEquals("Atrio",this.p.getStanzaCorrente().getNome());
+		assertEquals(20,this.p.getGiocatore().getCfu());	
+	}
+	@Test
+	void testSetParametroNull() {
+		vai.setParametro(null);
+		vai.esegui(p);
+		assertEquals("Atrio",this.p.getStanzaCorrente().getNome());
+		assertEquals(20,this.p.getGiocatore().getCfu());	
 	}
 	
 	@Test
-	public void testVaiUnaDirezioneEsistente() {
-		p.setStanzaCorrente(s1);
-		s1.impostaStanzaAdiacente("nord-ovest", s2);
-		vai.setParametro("nord-ovest");
+	void testBilocale() {
+		labirinto=Labirinto.newBuilder()
+				.addStanzaIniziale("Atrio")
+				.addAdiacenza("Atrio", "Bagno", "est")
+				.getLabirinto();
+		p=new Partita(labirinto,io);
+		vai.setParametro("nord");
 		vai.esegui(p);
-		assertEquals(s2, p.getStanzaCorrente());
-	}
-	
-	@Test
-	public void testVaiDirezioneInesistente() {
-		p.setStanzaCorrente(s1);
-		s1.impostaStanzaAdiacente("sud-ovest", s2);
-		vai.setParametro("in fondo a destra");
+		vai.setParametro("ovest");
 		vai.esegui(p);
-		assertNotEquals(s2, p.getStanzaCorrente());
+		vai.setParametro("sud");
+		vai.esegui(p);
+		vai.setParametro("est");
+		vai.esegui(p);
+		assertEquals(p.getStanzaCorrente().getNome(),"Bagno");
+		
 	}
 
 }

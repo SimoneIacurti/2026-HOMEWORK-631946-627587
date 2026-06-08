@@ -4,16 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 
 class GiocatoreTest {
 	
 	Partita p;
 	Giocatore g;
+	private IO io;
 	
 	@Test
 	public void PresiCfuIniziali() {
-		this.p=new Partita();
+		this.p=new Partita(io);
 		this.g=this.p.getGiocatore();
 		assertEquals(this.g.getCfu(),20);
 	}
